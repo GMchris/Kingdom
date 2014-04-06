@@ -1,0 +1,11 @@
+*{
+	padding: 0px;
+	margin: 0px;
+}
+
+#gameScreen{
+	height: 600px;
+	width: 800px;
+	background: red;
+	margin: auto;
+}
