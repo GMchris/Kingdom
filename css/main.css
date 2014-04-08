@@ -16,6 +16,7 @@ html,body,div{
 	width: 1000px;
 	background: #41d3f2;
 	margin: auto;
+	background-image: url(../images/backgrounds/plain.png)
 }
 
 /*Game*/
