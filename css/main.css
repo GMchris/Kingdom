@@ -30,28 +30,28 @@ html,body,div{
 
 .build{
 	text-shadow:0px 0px 4px black,0px 0px 4px black;
-	line-height: 50px;
+	line-height: 40px;
 	vertical-align: middle;
 	text-align: center;
-	border:2px solid #235c28;
+	border:3px solid #274f0f;
 	border-bottom: none;
 	border-radius: 15px 15px 0px 0px;
 	position: absolute;
 	bottom: 0px;
 	cursor: pointer;
 	display: inline-block;
-	background: linear-gradient(#9ae76b,#5a9d31 60%);
+	background: #70c53b;
 
 	width: 100px;
-	height: 50px;
+	height: 40px;
 }
 
 .build:hover{
-	background: linear-gradient(#baff8f,#9ae76b 60%);
+	background: #9ae76b;
 }
 
 .build:active{
-	background: linear-gradient(#416d26,#5a9d31);
+	background: #5a9d31;
 }
 
 .build:before{
@@ -63,7 +63,6 @@ html,body,div{
 	bottom: 0px;
 	cursor: pointer;
 	display: inline-block;
-	background: green;
 	width: 100px;
 	height: 70px;
 }
@@ -76,6 +75,166 @@ html,body,div{
 #spot5{ left:650px;}
 
 .building.upgraded{
-	height: 100%;
-	margin-top:0%;
+	height: 120px;
+}
+
+/*Prompts*/
+
+.prompt{
+	border-radius: 15px;
+	position: absolute;
+	background: -webkit-gradient(linear, 0 0, 0 100%, from(#dd8b2f), to(#ad5d04));
+	background: -webkit-linear-gradient(#dd8b2f, #ad5d04);
+	background: -moz-linear-gradient(#dd8b2f, #ad5d04);
+	background: -o-linear-gradient(#dd8b2f, #ad5d04);
+	background: linear-gradient(#dd8b2f, #ad5d04);
+	border:3px solid #381f02;
+	box-shadow:inset 3px 3px 15px 0px rgba(107, 57, 0, 1);
+	-webkit-box-shadow:inset 3px 3px 15px 0px rgba(107, 57, 0, 1);
+	-moz-box-shadow:inset 3px 3px 15px 0px rgba(107, 57, 0, 1);
+}
+
+.prompt.buildPrompt{
+	top:70px;
+	width: 200px;
+	height: 300px;
+}
+
+.buildCell{
+	cursor: pointer;
+	border-radius: 10px;
+	position:relative;
+	height: 75px;
+	width: 200px;
+	text-shadow:0px 0px 4px black;
+	background: linear-gradient(rgba(0,0,0,0.1),rgba(0,0,0,0.0))
+}
+
+.buildCell:hover{
+	background: rgba(255,215,0,0.4);
+}
+
+.buildCell:active{
+	background: rgba(0,0,0,0.4);
+}
+
+.icon{
+	position: absolute;
+	left: 5px;
+	top:5px;
+	width: 50px;
+	height: 50px;
+}
+
+.foresterIcon{
+	background: url(../images/icons/foresterIcon.png)
+}
+
+.mineIcon{
+	background: url(../images/icons/mineIcon.png)
+}
+
+.barnIcon{
+	background: url(../images/icons/barnIcon.png)
+}
+
+.barracksIcon{
+	background: url(../images/icons/barracksIcon.png)
+}
+
+.cellTitle{
+	text-decoration: underline;
+	position: absolute;
+	left:60px;
+	top:5px;
+}
+
+.woodCost{
+	font-size: 1.2em;
+	position: absolute;
+	left:60px;
+	top:30px;
+}
+
+.woodCost:before{
+	content:url(../images/icons/costWood.png);
+	margin-right:3px;
+}
+
+.citizenCost{
+	height: 20px;
+	font-size: 1.2em;
+	position: absolute;
+	left:130px;
+	top:30px;
+}
+
+.citizenCost:before{
+	content:url(../images/icons/costCitizens.png);
+	margin-right:3px;
+}
+
+.cellDescription{
+	font-size: 13px;
+	position: absolute;
+	bottom: 2px;
+	left: 5px;
+}
+/*Other*/
+
+#statistics{
+	position: absolute;
+	height: 60px;
+	width: 550px;
+	left:250px;
+	bottom:0px;
+	background: #3a444d;
+	border:4px outset #4f5a65;
+	border-radius: 35px 35px 0px 0px;
+	border-bottom:none;
+}
+
+#statWrapper{
+	position: absolute;
+	top:15px;
+}
+
+.stats{
+	font-size: 1.1em;
+	display: inline-block;
+	width: 40px;
+	text-shadow:0px 0px 4px black;
+}
+
+.icons{
+	border-radius: 5px;
+	background-color: rgba(255,255,255,0.3);
+	margin-left: 10px;
+	display: inline-block;
+	height: 30px;
+	width: 30px;
+}
+
+.citizensIcon{
+	background-image: url(../images/icons/citizensIcon.png)
+}
+
+.woodIcon{
+	background-image: url(../images/icons/woodIcon.png)
+}
+
+.ironIcon{
+	background-image: url(../images/icons/ironIcon.png)
+}
+
+.goldIcon{
+	background-image: url(../images/icons/goldIcon.png)
+}
+
+.foodIcon{
+	background-image: url(../images/icons/foodIcon.png)
+}
+
+.warriorsIcon{
+	background-image: url(../images/icons/warriorsIcon.png)
 }

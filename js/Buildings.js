@@ -3,13 +3,21 @@
 var Structures = (function(){
 
 	function addEvents(){
-		$(".build").on("click",function(){
+		$(document).on("click",".build",function(e){
+			e.stopPropagation();
+			closePrompt();
 			openBuildMenu($(this));
 		});
 
-		$("body").on("click",".building",function(){
+		$(document).on("click",".building",function(){
 			console.log("sup")
+		});
+
+		$("#gameScreen").on("click",function(){
+			closePrompt();
 		})
+
+		buildingManager.build("townhall",3);
 	}
 
 function Building(){
@@ -37,6 +45,33 @@ function Building(){
 	}
 	this.gather = function(){
 		throw new Error("Undefined gather method")
+	}
+}
+
+var BuildingPseudo = {
+	townhall:{
+		costWood : 0,
+		costCitizens : 0
+	},
+
+	forester:{
+		costWood : 250,
+		costCitizens : 55
+	},
+
+	mine:{
+		costWood : 300,
+		costCitizens : 60
+	},
+
+	barn:{
+		costWood: 200,
+		costCitizens: 30
+	},
+
+	barracks:{
+		costWood : 400,
+		costCitizens : 70
 	}
 }
 
@@ -83,12 +118,59 @@ Barracks.prototype.gather=function(){
 
 //Creates a menu to select a building from
 function openBuildMenu(object){
+	var classArray = ["forester","mine","barn","barracks"];
 	var index = parseInt(object.attr("id").charAt(object.attr("id").length-1));
-	
+	$("<div/>")
+	.addClass("prompt buildPrompt")
+	.css("left",170+(index*120)+"px")
+	.appendTo("#gameScreen");
+
+	for(var i=0;i<classArray.length;i++){
+		$(makeBuildCell(classArray[i],index)).appendTo(".buildPrompt");
+	}
+
+}
+
+function makeBuildCell(type,index){
+	var title=type.toUpperCase(),description,icon=type+"Icon";
+	var cell = $("<div/>")
+	.addClass("buildCell")
+	.on("click",function(e){
+		e.stopPropagation();
+		buildingManager.build(type,index);
+	})
+
+	switch(type){
+		case "forester":
+			description="Gathers wood and some food.";
+			break;
+		case "mine":
+			description="Refines iron and some gold.";
+			break;
+		case "barn":
+			description="Produces food";
+			break;
+		case "barracks":
+			description="Hire warriors";
+			break;
+		default:
+			break;
+	}
+	$("<div/>").addClass("icon "+icon).appendTo(cell);
+	$("<div/>").addClass("cellTitle").text(title).appendTo(cell);
+	$("<div/>").addClass("woodCost").text(BuildingPseudo[type].costWood).appendTo(cell);
+	$("<div/>").addClass("citizenCost").text(BuildingPseudo[type].costCitizens).appendTo(cell);
+	$("<div/>").addClass("cellDescription").text(description).appendTo(cell);
+
+	return cell;
+}
+
+function closePrompt(){
+	$(".prompt").remove();
 }
 
 var buildingManager = {
-	allBuildings:["","",new TownHall(),"","",""],
+	allBuildings:["","","","","",""],
 
 	gatherResources:function(){
 		for(var i=0;i<this.allBuildings.length;i++){
@@ -99,12 +181,46 @@ var buildingManager = {
 		}
 	},
 
-	build:function(){
+	build:function(type,index){
+		if(Game.playerStats.wood>=BuildingPseudo[type].costWood
+			&& Game.playerStats.citizens>=BuildingPseudo[type].costCitizens){
+			//Backend
+			Game.playerStats.wood -= BuildingPseudo[type].costWood;
+			Game.playerStats.citizens -= BuildingPseudo[type].costCitizens;
 
+		switch(type){
+		case "townhall":
+			this.allBuildings[index]=new TownHall();
+			break;
+		case "forester":
+			this.allBuildings[index]=new Forester();
+			break;
+		case "mine":
+			this.allBuildings[index]=new Mine();
+			break;
+		case "barn":
+			this.allBuildings[index]=new Barn();
+			break;
+		case "barracks":
+			this.allBuildings[index]=new Barracks();
+			break;
+		default:
+			break;
+			}
+			Game.updatePlayerStats();
+			$(".prompt").remove();
+		//Frontend
+
+		$("#spot"+index)
+		.addClass("building")
+		.removeClass("build")
+		.css("background-image","url(images/buildings/"+type+"1.png)");
+
+		}
 	},
 
-	destroy:function(){
-
+	destroy:function(index){
+		
 	}
 }
 
