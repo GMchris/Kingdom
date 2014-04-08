@@ -150,9 +150,18 @@ html,body,div{
 	top:5px;
 }
 
+.prompt.simpleBuildingPrompt{
+	top:270px;
+	width: 200px;
+	height: 100px;
+}
+
 .woodCost{
 	font-size: 1.2em;
 	position: absolute;
+}
+
+.buildPrompt .woodCost{
 	left:60px;
 	top:30px;
 }
@@ -166,6 +175,9 @@ html,body,div{
 	height: 20px;
 	font-size: 1.2em;
 	position: absolute;
+}
+
+.buildPrompt .citizenCost{
 	left:130px;
 	top:30px;
 }

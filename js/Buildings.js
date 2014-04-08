@@ -21,6 +21,7 @@ var Structures = (function(){
 	}
 
 function Building(){
+	this.type = null;
 	this.level=1;
 
 	this.woodToUpgrade=null;
@@ -29,22 +30,26 @@ function Building(){
 	this.totalWoodSpent=0,
 	this.totalCitizensSpent=0,
 
-	this.upgrade = function(){
-		if(this.level==4){return}//Cannot go past level four
+	this.upgrade = function(index){
+		if(this.level==3){return}//Cannot go past level four
 		if(Game.playerStats.wood >= this.woodToUpgrade&&Game.playerStats.citizens >= this.citizensToUpgrade){
 			this.level++;//raise level
 			Game.playerStats.wood -= this.woodToUpgrade;//remove wood and citizens from the player
 			Game.playerStats.citizens -= this.citizensToUpgrade;
 			this.totalWoodSpent += this.woodToUpgrade;//adjust the ammount of wood and citizens that were used to create the building
-			this.totalCitizensSpent += this.woodToUpgrade;
+			this.totalCitizensSpent += this.citizensToUpgrade;
 			this.woodToUpgrade *= 2;//raise the price for further upgrades
 			this.citizensToUpgrade *=2;
 
+			Game.updatePlayerStats();
+
+			$("#spot"+index)
+			.css("background-image","url(images/buildings/"+this.type+this.level+".png)");
 
 		}
 	}
 	this.gather = function(){
-		throw new Error("Undefined gather method")
+		throw new Error("Undefined gather method");
 	}
 }
 
@@ -76,11 +81,41 @@ var BuildingPseudo = {
 }
 
 //Building classes
-function Forester(){};
-function Mine(){};
-function Barracks(){};
-function TownHall(){};
-function Barn(){};
+function Forester(){
+	this.type="forester";
+	this.totalWoodSpent = BuildingPseudo.forester.costWood;
+	this.totalCitizensSpent = BuildingPseudo.forester.costCitizens;
+	this.woodToUpgrade = this.totalWoodSpent*2;
+	this.citizensToUpgrade = this.totalCitizensSpent*2;
+};
+function Mine(){
+	this.type="mine";
+	this.totalWoodSpent = BuildingPseudo.mine.costWood;
+	this.totalCitizensSpent = BuildingPseudo.mine.costCitizens;
+	this.woodToUpgrade = this.totalWoodSpent*2;
+	this.citizensToUpgrade = this.totalCitizensSpent*2;
+};
+function Barracks(){
+	this.type="barracks";
+	this.totalWoodSpent = BuildingPseudo.barracks.costWood;
+	this.totalCitizensSpent = BuildingPseudo.barracks.costCitizens;
+	this.woodToUpgrade = this.totalWoodSpent*2;
+	this.citizensToUpgrade = this.totalCitizensSpent*2;
+};
+function TownHall(){
+	this.type="townhall";
+	this.totalWoodSpent = BuildingPseudo.townhall.costWood;
+	this.totalCitizensSpent = BuildingPseudo.townhall.costCitizens;
+	this.woodToUpgrade = 1000;
+	this.citizensToUpgrade = 0;
+};
+function Barn(){
+	this.type="barn";
+	this.totalWoodSpent = BuildingPseudo.barn.costWood;
+	this.totalCitizensSpent = BuildingPseudo.barn.costCitizens;
+	this.woodToUpgrade = this.totalWoodSpent*2;
+	this.citizensToUpgrade = this.totalCitizensSpent*2;
+};
 
 //Building inhertiance
 Forester.prototype = new Building();
@@ -117,9 +152,9 @@ Barracks.prototype.gather=function(){
 }
 
 //Creates a menu to select a building from
-function openBuildMenu(object){
+function openBuildMenu(element){
 	var classArray = ["forester","mine","barn","barracks"];
-	var index = parseInt(object.attr("id").charAt(object.attr("id").length-1));
+	var index = parseInt(element.attr("id").charAt(element.attr("id").length-1));
 	$("<div/>")
 	.addClass("prompt buildPrompt")
 	.css("left",170+(index*120)+"px")
@@ -164,6 +199,17 @@ function makeBuildCell(type,index){
 
 	return cell;
 }
+
+//Creates the menu for an existing building
+function openBuildingMenu(element){
+	var index = parseInt(element.attr("id").charAt(element.attr("id").length-1));
+	$("<div/>")
+	.addClass("prompt ")
+	.css("left",170+(index*120)+"px")
+	.appendTo("#gameScreen");
+
+}
+
 
 function closePrompt(){
 	$(".prompt").remove();

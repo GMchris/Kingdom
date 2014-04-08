@@ -17,12 +17,12 @@ var GameControls = {
 	},
 
 	setInitialValues: function(){
-		Player.wood =350;
-		Player.iron =0;
-		Player.food =50;
-		Player.gold =0;
-		Player.citizens =60;
-		Player.warriors =0;
+		Player.wood =10000;
+		Player.iron =10000;
+		Player.food =10000;
+		Player.gold =10000;
+		Player.citizens =10000;
+		Player.warriors =10000;
 	},
 
 	gameLoop: function(){
