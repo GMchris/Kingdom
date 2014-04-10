@@ -70,6 +70,12 @@ html,body,div{
 	height: 70px;
 }
 
+.building:hover{
+	border-radius: 20px 20px 0px 0px;
+	box-shadow: 0px 0px 15px #fff81b;
+	background-color: rgba(255,248,27,0.6);
+}
+
 #spot0{ left:50px;}
 #spot1{ left:170px;}
 #spot2{ left:290px;}
@@ -261,18 +267,19 @@ html,body,div{
 #statistics{
 	position: absolute;
 	height: 60px;
-	width: 550px;
-	left:250px;
-	bottom:0px;
+	width: 600px;
+	left:0px;
+	bottom:40px;
 	background: #3a444d;
 	border:4px outset #4f5a65;
-	border-radius: 35px 35px 0px 0px;
-	border-bottom:none;
+	border-radius: 0px 35px 35px 0px;
+	border-left:none;
 }
 
 #statWrapper{
 	position: absolute;
 	top:15px;
+	left:50px;
 }
 
 .stats{
@@ -315,4 +322,59 @@ html,body,div{
 
 .warriorsIcon{
 	background-image: url(../images/icons/warriorsIcon.png)
+}
+
+/*Time bar*/
+
+#time{
+	position:absolute;
+	right:0px;
+	bottom:40px;
+	width:300px;
+	height:60px;
+	background-color:#ae1f00;
+	border-radius: 35px 0px 0px 35px;
+	border:4px outset #c92300;
+	border-right: none;
+	text-shadow:0px 0px 5px black;
+}
+
+#month{
+	text-align: right;
+	font-size: 1.3em;
+	position:inherit;
+	width:100px;
+	left:10px;
+	line-height: 60px;
+}
+
+#day{
+	text-align: right;
+	position:inherit;
+	left:130px;
+	line-height: 60px;
+	width:20px;
+	font-size: 2em;
+}
+
+#season{
+	top:6px;
+	font-size: 1.5em;
+	border-radius: 15px;
+	padding:8px;
+	position:inherit;
+	left:200px;
+	background-color: rgba(0,0,0,0.5);
+}
+
+#seasonModifiers{
+	border-top-left-radius: 25px;
+	text-align: right;
+	padding:5px 10px 0px 0px;
+	position:absolute;
+	height:25px;
+	background-color: rgba(0,0,0,0.7);
+	width:265px;
+	right:0px;
+	bottom:108px;
 }
