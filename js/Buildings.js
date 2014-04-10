@@ -9,8 +9,10 @@ var Structures = (function(){
 			openBuildMenu($(this));
 		});
 
-		$(document).on("click",".building",function(){
-			console.log("sup")
+		$(document).on("click",".building",function(e){
+			e.stopPropagation();
+			closePrompt();
+			openBuildingMenu($(this));
 		});
 
 		$("#gameScreen").on("click",function(){
@@ -45,6 +47,16 @@ function Building(){
 
 			$("#spot"+index)
 			.css("background-image","url(images/buildings/"+this.type+this.level+".png)");
+			closePrompt();
+			// Make taller level three building
+			if(this.level==3){
+				$("#spot"+index).addClass("upgraded");
+			}
+
+			//Change background of village
+			if(this instanceof TownHall){
+				$("#village").css("background-image","url(images/backgrounds/village"+this.level+".png)");
+			}
 
 		}
 	}
@@ -60,23 +72,23 @@ var BuildingPseudo = {
 	},
 
 	forester:{
-		costWood : 250,
-		costCitizens : 55
+		costWood : 500,
+		costCitizens : 110
 	},
 
 	mine:{
-		costWood : 300,
-		costCitizens : 60
+		costWood : 600,
+		costCitizens : 120
 	},
 
 	barn:{
-		costWood: 200,
-		costCitizens: 30
+		costWood: 400,
+		costCitizens: 60
 	},
 
 	barracks:{
-		costWood : 400,
-		costCitizens : 70
+		costWood : 800,
+		costCitizens : 140
 	}
 }
 
@@ -103,6 +115,7 @@ function Barracks(){
 	this.citizensToUpgrade = this.totalCitizensSpent*2;
 };
 function TownHall(){
+	this.currentResource = "wood";
 	this.type="townhall";
 	this.totalWoodSpent = BuildingPseudo.townhall.costWood;
 	this.totalCitizensSpent = BuildingPseudo.townhall.costCitizens;
@@ -139,6 +152,7 @@ Mine.prototype.gather = function(){
 //TownHall specifics
 TownHall.prototype.gather=function(){
 	Game.playerStats.citizens += this.level/4;
+	Game.playerStats[this.currentResource] += this.level/4;
 }
 
 //Barn specifics
@@ -202,15 +216,71 @@ function makeBuildCell(type,index){
 
 //Creates the menu for an existing building
 function openBuildingMenu(element){
-	var index = parseInt(element.attr("id").charAt(element.attr("id").length-1));
-	$("<div/>")
-	.addClass("prompt ")
-	.css("left",170+(index*120)+"px")
-	.appendTo("#gameScreen");
-
+	var index = parseInt(element.attr("id").charAt(element.attr("id").length-1)),object=buildingManager.allBuildings[index];
+	if(object.type=="forester"||object.type=="mine"||object.type=="barn"){
+		if(object.level<3){
+			openSimpleBuildingMenu(index,object);
+		}
+		//Creates a prompt with only the destroy button
+		else{
+			openDestroyMenu(index);
+		}
+	}
 }
 
+//Creates a building menu for barns, foresters and mine. Display
+function openSimpleBuildingMenu(index,object){
+	$("<div/>")
+		.addClass("prompt simpleBuildingPrompt")
+		.css("left",170+(index*120)+"px")
+		.appendTo("#gameScreen");
 
+	$("<div/>")
+		.addClass("buildingButtons upgradeButton")
+		.appendTo(".simpleBuildingPrompt")
+		.on("click",function(e){
+			e.stopPropagation;
+			buildingManager.allBuildings[index].upgrade(index);
+		});
+
+	$("<div/>")
+		.addClass("woodCost")
+		.text(object.woodToUpgrade)
+		.appendTo(".simpleBuildingPrompt");
+
+	$("<div/>")
+		.addClass("citizenCost")
+		.text(object.citizensToUpgrade)
+		.appendTo(".simpleBuildingPrompt");
+
+	$("<div/>")
+		.addClass("buildingButtons destroyButton")
+		.appendTo(".simpleBuildingPrompt")
+		.on("click",function(e){
+			e.stopPropagation;
+			buildingManager.destroy(index);
+			Game.updatePlayerStats();
+		});
+}
+
+//Creates a menu with only a remove button.
+function openDestroyMenu(index){
+	$("<div/>")
+		.addClass("prompt destroyPrompt")
+		.css("left",230+(index*120)+"px")
+		.appendTo("#gameScreen");
+
+	$("<div/>")
+		.addClass("buildingButtons destroyButton")
+		.appendTo(".destroyPrompt")
+		.on("click",function(e){
+			e.stopPropagation;
+			buildingManager.destroy(index);
+			Game.updatePlayerStats();
+		});
+}
+
+//Close all prompts on the screen.
 function closePrompt(){
 	$(".prompt").remove();
 }
@@ -266,7 +336,15 @@ var buildingManager = {
 	},
 
 	destroy:function(index){
-		
+		Game.playerStats.wood += this.allBuildings[index].totalWoodSpent/2;
+		Game.playerStats.citizens += this.allBuildings[index].totalCitizensSpent;
+		this.allBuildings[index]="";
+		$("#spot"+index)
+		.css("background-image","none")
+		.removeClass("building")
+		.removeClass("upgraded")
+		.addClass("build");
+		closePrompt();
 	}
 }
 

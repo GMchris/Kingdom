@@ -9,6 +9,7 @@ html,body,div{
 }
 
 #gameScreen{
+	cursor:url(../images/regularCursor.png), auto;
 	margin: 0px;
 	overflow: hidden;
 	position: relative;
@@ -22,6 +23,7 @@ html,body,div{
 /*Game*/
 
 #village{
+	background-image: url(../images/backgrounds/village1.png);
 	position: absolute;
 	width: 800px;
 	height: 130px;
@@ -39,7 +41,7 @@ html,body,div{
 	border-radius: 15px 15px 0px 0px;
 	position: absolute;
 	bottom: 0px;
-	cursor: pointer;
+	cursor: url(../images/pointerCursor.png),auto;
 	display: inline-block;
 	background: #70c53b;
 
@@ -62,7 +64,7 @@ html,body,div{
 .building{
 	position: absolute;
 	bottom: 0px;
-	cursor: pointer;
+	cursor: url(../images/pointerCursor.png),auto;
 	display: inline-block;
 	width: 100px;
 	height: 70px;
@@ -95,14 +97,15 @@ html,body,div{
 	-moz-box-shadow:inset 3px 3px 15px 0px rgba(107, 57, 0, 1);
 }
 
+/*Build menus*/
 .prompt.buildPrompt{
-	top:70px;
+	top:130px;
 	width: 200px;
 	height: 300px;
 }
 
 .buildCell{
-	cursor: pointer;
+	cursor: url(../images/pointerCursor.png),auto;
 	border-radius: 10px;
 	position:relative;
 	height: 75px;
@@ -150,10 +153,53 @@ html,body,div{
 	top:5px;
 }
 
+/*Building menus*/
+
 .prompt.simpleBuildingPrompt{
-	top:270px;
+	top:340px;
 	width: 200px;
-	height: 100px;
+	height: 75px;
+}
+
+.buildingButtons{
+	cursor: url(../images/pointerCursor.png),auto;
+	position: absolute;
+	height: 50px;
+	width: 50px;
+	border:3px solid #381f02;
+	border-radius: 10px;
+}
+
+.upgradeButton{
+	top:10px;
+	left:10px;
+	background-color: #3ec116;
+	background-image: url(../images/icons/upgradeIcon.png);
+	box-shadow: inset 0px 0px 5px #145600;
+}
+
+.upgradeButton:hover{
+	background-color: #8cec6e;
+}
+
+.upgradeButton:active{
+	background-color: #195e04;
+}
+
+.destroyButton{
+	top:10px;
+	right:7px;
+	background-color: #ee452b;
+	background-image: url(../images/icons/destroyIcon.png);
+	box-shadow: inset 0px 0px 5px #670e00;
+}
+
+.destroyButton:hover{
+	background-color: #ff745f;
+}
+
+.destroyButton:active{
+	background-color: #ad1700;
 }
 
 .woodCost{
@@ -164,6 +210,11 @@ html,body,div{
 .buildPrompt .woodCost{
 	left:60px;
 	top:30px;
+}
+
+.simpleBuildingPrompt .woodCost{
+	left:68px;
+	top:10px;
 }
 
 .woodCost:before{
@@ -182,6 +233,11 @@ html,body,div{
 	top:30px;
 }
 
+.simpleBuildingPrompt .citizenCost{
+	left:68px;
+	top:40px;
+}
+
 .citizenCost:before{
 	content:url(../images/icons/costCitizens.png);
 	margin-right:3px;
@@ -193,7 +249,14 @@ html,body,div{
 	bottom: 2px;
 	left: 5px;
 }
-/*Other*/
+
+.destroyPrompt{
+	top:290px;
+	width: 70px;
+	height: 75px;
+}
+
+/*Statistics bar*/
 
 #statistics{
 	position: absolute;
@@ -213,6 +276,8 @@ html,body,div{
 }
 
 .stats{
+	position: relative;
+	bottom:7px;
 	font-size: 1.1em;
 	display: inline-block;
 	width: 40px;

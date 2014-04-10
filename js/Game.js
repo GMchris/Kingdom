@@ -13,7 +13,7 @@ var GameControls = {
 	dateTimer:null,
 
 	activateTimer:function(){
-		this.gameTimer = setInterval(function(){GameControls.gameLoop();},1000);
+		this.gameTimer = setInterval(function(){GameControls.gameLoop();},500);
 	},
 
 	setInitialValues: function(){
