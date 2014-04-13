@@ -6,6 +6,7 @@ var GameControls = {
 		GameControls.setInitialValues();
 		cyclePlayer();
 		GameControls.activateTimer();
+		Structures.buildingInit();
 	},
 
 	gameTimer:null,
@@ -23,7 +24,7 @@ var GameControls = {
 		Player.iron =10000;
 		Player.food =10000;
 		Player.gold =10000;
-		Player.citizens =10000;
+		Player.citizens =2000;
 		Player.warriors =10000;
 	},
 
@@ -50,6 +51,7 @@ var Player = {
 }
 
 var Time={
+		total: 0,
 		ticks : 0,
 		day : 1,
 		month : 0,
@@ -59,8 +61,9 @@ var Time={
 		seasonModifiers:["Spring modifer","Summer modifer","Autumn modifer","Winter modifer"],
 
 		tick: function(){
+			this.total++;
 			this.ticks++;
-			if(this.ticks>=5){
+			if(this.ticks>=4){
 				this.ticks=0;
 				this.addDay()
 			}
@@ -76,6 +79,8 @@ var Time={
 		},
 		addMonth:function(){
 			this.month++;
+			tax();
+			feed();
 			if(this.month==3||this.month==6||this.month==9){
 				this.addSeason();
 			}
@@ -87,6 +92,23 @@ var Time={
 			$("#seasonModifiers").text(this.seasonModifiers[this.season]);
 		},
 	}
+
+function tax(){
+	var taxThisMonth = Time.month*150;
+	if(Player.gold>=taxThisMonth){
+		Player.gold -= taxThisMonth;
+		return;
+	}
+	GameControls.loseGame("tax")
+}
+
+function feed(){
+	if(Player.food>=Player.citizens){
+		Player.food -= Player.citizens;
+		return;
+	}
+	GameControls.loseGame("food")
+}
 
 function cyclePlayer(){
 	var spots = $(".stats"),iterator=0;
@@ -102,7 +124,8 @@ return {
 	playerStats:Player,
 	updatePlayerStats:cyclePlayer,
 	activateTimer:GameControls.activateTimer,
-	deactivateTimer:GameControls.deactivateTimer
+	deactivateTimer:GameControls.deactivateTimer,
+	getSeason:Time.seasons[Time.season],
 }
 
 })();

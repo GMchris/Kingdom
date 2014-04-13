@@ -72,7 +72,7 @@ html,body,div{
 
 .building:hover{
 	border-radius: 20px 20px 0px 0px;
-	box-shadow: 0px 0px 15px #fff81b;
+	box-shadow: 0px 0px 10px #fff81b;
 	background-color: rgba(255,248,27,0.6);
 }
 
@@ -161,6 +161,7 @@ html,body,div{
 
 /*Building menus*/
 
+
 .prompt.simpleBuildingPrompt{
 	top:340px;
 	width: 200px;
@@ -192,6 +193,20 @@ html,body,div{
 	background-color: #195e04;
 }
 
+.upgradeButton.inactive{
+	background-image: none;
+	background-color: #6e7868;
+	box-shadow: inset 0px 0px 5px #485142;
+}
+
+.upgradeButton.inactive:hover{
+	background:#6e7e62;
+}
+
+.upgradeButton.inactive:active{
+	background:#3e4538;
+}
+
 .destroyButton{
 	top:10px;
 	right:7px;
@@ -218,7 +233,7 @@ html,body,div{
 	top:30px;
 }
 
-.simpleBuildingPrompt .woodCost{
+.townhallBuildingPrompt .woodCost,.simpleBuildingPrompt .woodCost{
 	left:68px;
 	top:10px;
 }
@@ -239,9 +254,46 @@ html,body,div{
 	top:30px;
 }
 
-.simpleBuildingPrompt .citizenCost{
+.townhallBuildingPrompt .citizenCost,.simpleBuildingPrompt .citizenCost{
 	left:68px;
 	top:40px;
+}
+
+.productionIcon{
+	border-radius: 3px;
+	border:2px solid rgba(0,0,0,0.8);
+	position: absolute;
+	height: 50px;
+	width: 50px;
+	background: red;
+}
+
+.productionIcon:hover{
+	border:2px solid #ffe100;
+}
+
+.productionIcon:active{
+	border:2px solid #34d238;
+}
+
+#wood{
+	top:10px;
+	right: 10px;
+}
+
+#iron{
+	top:70px;
+	right: 70px;
+}
+
+#food{
+	top:70px;
+	right:130px;
+}
+
+#gold{
+	top:70px;
+	right: 10px;
 }
 
 .citizenCost:before{
@@ -254,6 +306,12 @@ html,body,div{
 	position: absolute;
 	bottom: 2px;
 	left: 5px;
+}
+
+.prompt.townhallBuildingPrompt{
+	width: 200px;
+	height: 140px;
+	top:200px;
 }
 
 .destroyPrompt{
@@ -269,7 +327,7 @@ html,body,div{
 	height: 60px;
 	width: 600px;
 	left:0px;
-	bottom:40px;
+	bottom:20px;
 	background: #3a444d;
 	border:4px outset #4f5a65;
 	border-radius: 0px 35px 35px 0px;
@@ -329,7 +387,7 @@ html,body,div{
 #time{
 	position:absolute;
 	right:0px;
-	bottom:40px;
+	bottom:20px;
 	width:300px;
 	height:60px;
 	background-color:#ae1f00;
@@ -341,9 +399,9 @@ html,body,div{
 
 #month{
 	text-align: right;
-	font-size: 1.3em;
+	font-size: 1.6em;
 	position:inherit;
-	width:100px;
+	width:140px;
 	left:10px;
 	line-height: 60px;
 }
@@ -351,9 +409,9 @@ html,body,div{
 #day{
 	text-align: right;
 	position:inherit;
-	left:130px;
+	left:155px;
 	line-height: 60px;
-	width:20px;
+	width:40px;
 	font-size: 2em;
 }
 
@@ -372,9 +430,9 @@ html,body,div{
 	text-align: right;
 	padding:5px 10px 0px 0px;
 	position:absolute;
-	height:25px;
+	height:20px;
 	background-color: rgba(0,0,0,0.7);
 	width:265px;
 	right:0px;
-	bottom:108px;
+	bottom:88px;
 }

@@ -29,8 +29,8 @@ function Building(){
 	this.woodToUpgrade=null;
 	this.citizensToUpgrade = null;
 
-	this.totalWoodSpent=0,
-	this.totalCitizensSpent=0,
+	this.totalWoodSpent=0;
+	this.totalCitizensSpent=0;
 
 	this.upgrade = function(index){
 		if(this.level==3){return}//Cannot go past level four
@@ -67,7 +67,7 @@ function Building(){
 
 var BuildingPseudo = {
 	townhall:{
-		costWood : 0,
+		costWood : 1000,
 		costCitizens : 0
 	},
 
@@ -180,6 +180,7 @@ function openBuildMenu(element){
 
 }
 
+//Creates a selection with the building type to add.
 function makeBuildCell(type,index){
 	var title=type.toUpperCase(),description,icon=type+"Icon";
 	var cell = $("<div/>")
@@ -220,11 +221,16 @@ function openBuildingMenu(element){
 	if(object.type=="forester"||object.type=="mine"||object.type=="barn"){
 		if(object.level<3){
 			openSimpleBuildingMenu(index,object);
+			return;
 		}
 		//Creates a prompt with only the destroy button
 		else{
 			openDestroyMenu(index);
+			return;
 		}
+	}
+	else if(object.type=="townhall"){
+		openTownhallBuildingMenu(index,object);
 	}
 }
 
@@ -263,6 +269,56 @@ function openSimpleBuildingMenu(index,object){
 		});
 }
 
+//Creates a menu for the townhall
+function openTownhallBuildingMenu(index,object){
+	var lastLevel = (object.level==3) ? true : false;
+	var production = ["wood","iron","food","gold"];
+	$("<div/>")
+		.addClass("prompt townhallBuildingPrompt")
+		.css("left",170+(index*120)+"px")
+		.css("top",(lastLevel)?"200px":"250px")
+		.appendTo("#gameScreen");
+
+	var upgradeButton= $("<div/>").addClass("buildingButtons upgradeButton");
+	if(lastLevel){
+		upgradeButton.addClass("inactive");
+	}else{
+	$("<div/>")
+		upgradeButton.on("click",function(e){
+				e.stopPropagation;
+				buildingManager.allBuildings[index].upgrade(index);
+			});
+	}
+		upgradeButton.appendTo(".townhallBuildingPrompt");
+
+	$("<div/>")
+		.addClass("woodCost")
+		.text(object.woodToUpgrade)
+		.appendTo(".townhallBuildingPrompt");
+
+	$("<div/>")
+		.addClass("citizenCost")
+		.text(object.citizensToUpgrade)
+		.appendTo(".townhallBuildingPrompt");
+
+	for(var i=0;i<production.length;i++){
+		var tempProd = production[i];
+		$("<div/>",{
+			"id":production[i]
+		})
+			.addClass("productionIcon")
+			.css("background-image","url(images/icons/"+production[i]+"ProductionIcon.png)")
+			.appendTo(".townhallBuildingPrompt")
+			.on("click",function(e){
+				e.stopPropagation();
+				buildingManager.allBuildings[index].currentResource=$(this).attr("id");
+				closePrompt();
+			})
+	}
+
+
+}
+
 //Creates a menu with only a remove button.
 function openDestroyMenu(index){
 	$("<div/>")
@@ -297,6 +353,7 @@ var buildingManager = {
 		}
 	},
 
+	//Add a building to the array and give it a graphic
 	build:function(type,index){
 		if(Game.playerStats.wood>=BuildingPseudo[type].costWood
 			&& Game.playerStats.citizens>=BuildingPseudo[type].costCitizens){
@@ -348,10 +405,9 @@ var buildingManager = {
 	}
 }
 
-window.addEventListener("load",addEvents,false);
-
 return {
-	buildingManager:buildingManager
+	buildingManager:buildingManager,
+	buildingInit:addEvents
 }
 
 })();
