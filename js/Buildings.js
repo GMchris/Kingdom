@@ -23,6 +23,7 @@ var Structures = (function(){
 	}
 
 function Building(){
+	this.index = null;
 	this.type = null;
 	this.level=1;
 
@@ -93,28 +94,32 @@ var BuildingPseudo = {
 }
 
 //Building classes
-function Forester(){
+function Forester(index){
+	this.index=index;
 	this.type="forester";
 	this.totalWoodSpent = BuildingPseudo.forester.costWood;
 	this.totalCitizensSpent = BuildingPseudo.forester.costCitizens;
 	this.woodToUpgrade = this.totalWoodSpent*2;
 	this.citizensToUpgrade = this.totalCitizensSpent*2;
 };
-function Mine(){
+function Mine(index){
+	this.index=index;
 	this.type="mine";
 	this.totalWoodSpent = BuildingPseudo.mine.costWood;
 	this.totalCitizensSpent = BuildingPseudo.mine.costCitizens;
 	this.woodToUpgrade = this.totalWoodSpent*2;
 	this.citizensToUpgrade = this.totalCitizensSpent*2;
 };
-function Barracks(){
+function Barracks(index){
+	this.index=index;
 	this.type="barracks";
 	this.totalWoodSpent = BuildingPseudo.barracks.costWood;
 	this.totalCitizensSpent = BuildingPseudo.barracks.costCitizens;
 	this.woodToUpgrade = this.totalWoodSpent*2;
 	this.citizensToUpgrade = this.totalCitizensSpent*2;
 };
-function TownHall(){
+function TownHall(index){
+	this.index=index;
 	this.currentResource = "wood";
 	this.type="townhall";
 	this.totalWoodSpent = BuildingPseudo.townhall.costWood;
@@ -122,7 +127,8 @@ function TownHall(){
 	this.woodToUpgrade = 1000;
 	this.citizensToUpgrade = 0;
 };
-function Barn(){
+function Barn(index){
+	this.index=index;
 	this.type="barn";
 	this.totalWoodSpent = BuildingPseudo.barn.costWood;
 	this.totalCitizensSpent = BuildingPseudo.barn.costCitizens;
@@ -139,25 +145,35 @@ Barn.prototype = new Building();
 
 //Forester specifics
 Forester.prototype.gather = function(){
+	var currentSeason = Game.getSeason;
 	Game.playerStats.wood += this.level*2;
-	Game.playerStats.food += this.level;
+	if(currentSeason=="Spring"){Game.playerStats.food += this.level*2}
+	else if(currentSeason=="Winter"){Game.playerStats.wood += this.level}
+	else{Game.playerStats.food += this.level;}
+	floatIcon("wood",this.index)
 }
 
 //Mine specifics
 Mine.prototype.gather = function(){
 	Game.playerStats.iron += this.level*2;
-	Game.playerStats.gold += this.level/2;
+	if(Game.getSeason=="Summer"){Game.playerStats.gold += this.level}
+	else{Game.playerStats.gold += this.level/2;}
+	floatIcon("iron",this.index)
 }
 
 //TownHall specifics
 TownHall.prototype.gather=function(){
-	Game.playerStats.citizens += this.level/4;
+	if(Game.getSeason=="Autumn"){Game.playerStats.citizens += this.level/3}
+	else{Game.playerStats.citizens += this.level/4;}
 	Game.playerStats[this.currentResource] += this.level/4;
+	floatIcon("citizens",this.index)
 }
 
 //Barn specifics
 Barn.prototype.gather=function(){
-	Game.playerStats.food += this.level;
+	if(Game.getSeason=="Summer"){Game.playerStats.food += this.level*1.5;floatIcon("food",this.index);}
+	else if(Game.getSeason == "Winter"){}
+	else{Game.playerStats.food += this.level;floatIcon("food",this.index);}
 }
 
 //Barracks specifics
@@ -336,6 +352,16 @@ function openDestroyMenu(index){
 		});
 }
 
+function floatIcon(resource,index){
+	var floater = $("<div/>")
+	.addClass("floatIcon")
+	.css({"background-image":"url(images/icons/"+resource+"Icon.png)",
+	"left": 250+(index*120)+"px"})
+	.appendTo("#gameScreen");
+
+	setTimeout(function(){floater.remove();},1000)
+}
+
 //Close all prompts on the screen.
 function closePrompt(){
 	$(".prompt").remove();
@@ -363,19 +389,19 @@ var buildingManager = {
 
 		switch(type){
 		case "townhall":
-			this.allBuildings[index]=new TownHall();
+			this.allBuildings[index]=new TownHall(index);
 			break;
 		case "forester":
-			this.allBuildings[index]=new Forester();
+			this.allBuildings[index]=new Forester(index);
 			break;
 		case "mine":
-			this.allBuildings[index]=new Mine();
+			this.allBuildings[index]=new Mine(index);
 			break;
 		case "barn":
-			this.allBuildings[index]=new Barn();
+			this.allBuildings[index]=new Barn(index);
 			break;
 		case "barracks":
-			this.allBuildings[index]=new Barracks();
+			this.allBuildings[index]=new Barracks(index);
 			break;
 		default:
 			break;

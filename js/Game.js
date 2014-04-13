@@ -58,8 +58,7 @@ var Time={
 		season: 0,
 		months : ["March","April","May","June","July","August","September","October","November","December","January","February"],
 		seasons: ["Spring","Summer","Autumn","Winter"],
-		seasonModifiers:["Spring modifer","Summer modifer","Autumn modifer","Winter modifer"],
-
+		seasonModifiers:["Food from forester +100%","Gold +100%/Barn food +50%","Citizen grow +50%","Wood +50%/Food -100%"],
 		tick: function(){
 			this.total++;
 			this.ticks++;

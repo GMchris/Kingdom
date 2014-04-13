@@ -87,9 +87,29 @@ html,body,div{
 	height: 120px;
 }
 
+.floatIcon{
+	position: absolute;
+	height: 30px;
+	width: 30px;
+	-webkit-animation: float 1.1s;
+	animation: float 1.1s;
+}
+
+@-webkit-keyframes float{
+	0% {top:390px;opacity: 0}
+	15% {top:375px;opacity: 1}
+	100% {top:360px;opacity: 0}
+}
+
+@keyframes float{
+	0% {top:390px;opacity: 0}
+	15% {top:375px;opacity: 1}
+	100% {top:360px;opacity: 0}
+}
 /*Prompts*/
 
 .prompt{
+	z-index:200;
 	border-radius: 15px;
 	position: absolute;
 	background: -webkit-gradient(linear, 0 0, 0 100%, from(#dd8b2f), to(#ad5d04));
