@@ -111,6 +111,7 @@ function Mine(index){
 	this.citizensToUpgrade = this.totalCitizensSpent*2;
 };
 function Barracks(index){
+	this.active = true;
 	this.index=index;
 	this.type="barracks";
 	this.totalWoodSpent = BuildingPseudo.barracks.costWood;
@@ -166,6 +167,7 @@ TownHall.prototype.gather=function(){
 	if(Game.getSeason=="Autumn"){Game.playerStats.citizens += this.level/3}
 	else{Game.playerStats.citizens += this.level/4;}
 	Game.playerStats[this.currentResource] += this.level/4;
+	$("#foodOwed").text(Math.floor(Game.playerStats.citizens));
 	floatIcon("citizens",this.index)
 }
 
@@ -178,7 +180,10 @@ Barn.prototype.gather=function(){
 
 //Barracks specifics
 Barracks.prototype.gather=function(){
-	return;
+	if(this.active===false){return}
+	Game.playerStats.citizens -= 0.5;
+	Game.playerStats.warriors += this.level*0.10;
+	floatIcon("warriors",this.index);
 }
 
 //Creates a menu to select a building from
@@ -217,7 +222,7 @@ function makeBuildCell(type,index){
 			description="Produces food";
 			break;
 		case "barracks":
-			description="Hire warriors";
+			description="Convert citizens to warriors";
 			break;
 		default:
 			break;
