@@ -111,6 +111,7 @@ function Mine(index){
 	this.citizensToUpgrade = this.totalCitizensSpent*2;
 };
 function Barracks(index){
+	this.active = true;
 	this.index=index;
 	this.type="barracks";
 	this.totalWoodSpent = BuildingPseudo.barracks.costWood;
@@ -147,9 +148,9 @@ Barn.prototype = new Building();
 Forester.prototype.gather = function(){
 	var currentSeason = Game.getSeason;
 	Game.playerStats.wood += this.level*2;
-	if(currentSeason=="Spring"){Game.playerStats.food += this.level*2}
+	if(currentSeason=="Spring"){Game.playerStats.food += this.level*2;floatIcon("food",this.index),true}
 	else if(currentSeason=="Winter"){Game.playerStats.wood += this.level}
-	else{Game.playerStats.food += this.level;}
+	else{Game.playerStats.food += this.level;floatIcon("food",this.index,true);}
 	floatIcon("wood",this.index)
 }
 
@@ -159,6 +160,7 @@ Mine.prototype.gather = function(){
 	if(Game.getSeason=="Summer"){Game.playerStats.gold += this.level}
 	else{Game.playerStats.gold += this.level/2;}
 	floatIcon("iron",this.index)
+	floatIcon("gold",this.index,true);
 }
 
 //TownHall specifics
@@ -166,7 +168,9 @@ TownHall.prototype.gather=function(){
 	if(Game.getSeason=="Autumn"){Game.playerStats.citizens += this.level/3}
 	else{Game.playerStats.citizens += this.level/4;}
 	Game.playerStats[this.currentResource] += this.level/4;
+	$("#foodOwed").text(Math.floor(Game.playerStats.citizens));
 	floatIcon("citizens",this.index)
+	floatIcon(this.currentResource,this.index,true);
 }
 
 //Barn specifics
@@ -178,7 +182,10 @@ Barn.prototype.gather=function(){
 
 //Barracks specifics
 Barracks.prototype.gather=function(){
-	return;
+	if(this.active===false){return}
+	Game.playerStats.citizens -= 0.5;
+	Game.playerStats.warriors += this.level*0.10;
+	floatIcon("warriors",this.index);
 }
 
 //Creates a menu to select a building from
@@ -217,7 +224,7 @@ function makeBuildCell(type,index){
 			description="Produces food";
 			break;
 		case "barracks":
-			description="Hire warriors";
+			description="Convert citizens to warriors";
 			break;
 		default:
 			break;
@@ -234,7 +241,7 @@ function makeBuildCell(type,index){
 //Creates the menu for an existing building
 function openBuildingMenu(element){
 	var index = parseInt(element.attr("id").charAt(element.attr("id").length-1)),object=buildingManager.allBuildings[index];
-	if(object.type=="forester"||object.type=="mine"||object.type=="barn"){
+	if(object.type=="forester"||object.type=="mine"||object.type=="barn"||object.type=="barracks"){
 		if(object.level<3){
 			openSimpleBuildingMenu(index,object);
 			return;
@@ -252,8 +259,10 @@ function openBuildingMenu(element){
 
 //Creates a building menu for barns, foresters and mine. Display
 function openSimpleBuildingMenu(index,object){
+	var isBarracks = (object.type=="barracks");
+	var classForMenu = isBarracks ? "barracksBuildingPrompt":"simpleBuildingPrompt";
 	$("<div/>")
-		.addClass("prompt simpleBuildingPrompt")
+		.addClass("prompt "+classForMenu)
 		.css("left",170+(index*120)+"px")
 		.appendTo("#gameScreen");
 
@@ -292,7 +301,7 @@ function openTownhallBuildingMenu(index,object){
 	$("<div/>")
 		.addClass("prompt townhallBuildingPrompt")
 		.css("left",170+(index*120)+"px")
-		.css("top",(lastLevel)?"200px":"250px")
+		.css("top",(lastLevel)?"230px":"275px")
 		.appendTo("#gameScreen");
 
 	var upgradeButton= $("<div/>").addClass("buildingButtons upgradeButton");
@@ -352,11 +361,12 @@ function openDestroyMenu(index){
 		});
 }
 
-function floatIcon(resource,index){
+function floatIcon(resource,index,hasOffset){
+	var offset = (hasOffset)? 30:0;
 	var floater = $("<div/>")
 	.addClass("floatIcon")
 	.css({"background-image":"url(images/icons/"+resource+"Icon.png)",
-	"left": 250+(index*120)+"px"})
+	"left": 240+offset+(index*120)+"px"})
 	.appendTo("#gameScreen");
 
 	setTimeout(function(){floater.remove();},1000)

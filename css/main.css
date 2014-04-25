@@ -8,6 +8,10 @@ html,body,div{
 	margin:0px;
 }
 
+html,body{
+	height :100%;
+}
+
 #gameScreen{
 	cursor:url(../images/regularCursor.png), auto;
 	margin: 0px;
@@ -96,14 +100,14 @@ html,body,div{
 }
 
 @-webkit-keyframes float{
-	0% {top:390px;opacity: 0}
-	15% {top:375px;opacity: 1}
+	0% {top:400px;opacity: 0}
+	25% {top:375px;opacity: 1}
 	100% {top:360px;opacity: 0}
 }
 
 @keyframes float{
-	0% {top:390px;opacity: 0}
-	15% {top:375px;opacity: 1}
+	0% {top:400px;opacity: 0}
+	25% {top:375px;opacity: 1}
 	100% {top:360px;opacity: 0}
 }
 /*Prompts*/
@@ -186,6 +190,12 @@ html,body,div{
 	top:340px;
 	width: 200px;
 	height: 75px;
+}
+
+.prompt.barracksBuildingPrompt{
+	top:300px;
+	width: 150px;
+	height: 140px;
 }
 
 .buildingButtons{
@@ -400,6 +410,33 @@ html,body,div{
 
 .warriorsIcon{
 	background-image: url(../images/icons/warriorsIcon.png)
+}
+
+/*Owed*/
+
+.monthly{
+	line-height: 30px;
+	text-align: right;
+	vertical-align: middle;
+	padding-right: 10px;
+	background:#2b2b2b;
+	border-radius: 15px 0px 0px 15px;
+	position:absolute;
+	right:0px;
+	width:70px;
+	height:30px;
+}
+
+#foodOwed{
+	top:20px;
+}
+
+#goldOwed{
+	top:60px;
+}
+
+#woodOwed{
+	top:100px;
 }
 
 /*Time bar*/
