@@ -112,7 +112,7 @@ html,body{
 }
 /*Prompts*/
 
-.prompt{
+.prompt,.eventPrompt{
 	z-index:200;
 	border-radius: 15px;
 	position: absolute;
@@ -125,6 +125,66 @@ html,body{
 	box-shadow:inset 3px 3px 15px 0px rgba(107, 57, 0, 1);
 	-webkit-box-shadow:inset 3px 3px 15px 0px rgba(107, 57, 0, 1);
 	-moz-box-shadow:inset 3px 3px 15px 0px rgba(107, 57, 0, 1);
+}
+
+.blackoutWindow{
+	background-color:rgba(0,0,0,0.4);
+	position: absolute;
+	height: 650px;
+	width: 1000px;
+	z-index: 50;
+}
+
+.clickable{
+	cursor: url(../images/pointerCursor.png),auto;
+}
+
+.eventPrompt{
+	width: 400px;
+	height: 150px;
+	top:200px;
+	left:300px;
+	text-align: center;
+}
+
+.eventTitle{
+	font-size: 2em;
+	text-shadow: 0px 0px 10px black;
+	margin-top:10px;
+}
+
+.eventText{
+	width: 350px;
+	text-shadow: 0px 0px 7px black;
+	margin-left: 25px;
+}
+
+.invasionButton{
+	display: inline-block;
+	width: 100px;
+	height: 35px;
+	border-radius: 10px;
+	border:4px outset #722705;
+	text-align: center;
+}
+
+.fightButton{
+	box-shadow: inset 0px 0px 10px  #921300;
+	background-color: #ec3711;
+	margin:10px 10px 0px 10px;
+}
+
+.fightButton:hover{
+	background-color:#ff563d;
+}
+
+.bribeButton{
+	box-shadow: inset 0px 0px 10px  #d46700;
+	background-color:#ecb511;
+}
+
+.bribeButton:hover{
+	background-color:#ffd73b;
 }
 
 /*Build menus*/
@@ -237,12 +297,40 @@ html,body{
 	background:#3e4538;
 }
 
+.stopRecruitment,.continueRecruitment{
+	top:75px;
+	left:80px;
+	background-color:#ec7d00;
+	box-shadow: inset 0px 0px 5px #924d00;
+}
+
+.stopRecruitment:hover,.continueRecruitment:hover{
+	background-color:#fb8c10;
+}
+
+.stopRecruitment:active,.continueRecruitment:active{
+	background-color:#a95900;
+}
+
+.stopRecruitment{
+	background-image: url(../images/icons/stopRecruitment.png)
+}
+
+.continueRecruitment{
+	background-image: url(../images/icons/continueRecruitment.png)
+}
+
 .destroyButton{
 	top:10px;
 	right:7px;
 	background-color: #ee452b;
 	background-image: url(../images/icons/destroyIcon.png);
 	box-shadow: inset 0px 0px 5px #670e00;
+}
+
+.barracksBuildingPrompt .destroyButton{
+	left:10px;
+	top:75px;
 }
 
 .destroyButton:hover{
@@ -263,7 +351,7 @@ html,body{
 	top:30px;
 }
 
-.townhallBuildingPrompt .woodCost,.simpleBuildingPrompt .woodCost{
+.townhallBuildingPrompt .woodCost,.simpleBuildingPrompt .woodCost,.barracksBuildingPrompt .woodCost{
 	left:68px;
 	top:10px;
 }
@@ -284,7 +372,7 @@ html,body{
 	top:30px;
 }
 
-.townhallBuildingPrompt .citizenCost,.simpleBuildingPrompt .citizenCost{
+.townhallBuildingPrompt .citizenCost,.simpleBuildingPrompt .citizenCost,.barracksBuildingPrompt .citizenCost{
 	left:68px;
 	top:40px;
 }

@@ -268,7 +268,7 @@ function openSimpleBuildingMenu(index,object){
 
 	$("<div/>")
 		.addClass("buildingButtons upgradeButton")
-		.appendTo(".simpleBuildingPrompt")
+		.appendTo(".prompt")
 		.on("click",function(e){
 			e.stopPropagation;
 			buildingManager.allBuildings[index].upgrade(index);
@@ -277,21 +277,35 @@ function openSimpleBuildingMenu(index,object){
 	$("<div/>")
 		.addClass("woodCost")
 		.text(object.woodToUpgrade)
-		.appendTo(".simpleBuildingPrompt");
+		.appendTo(".prompt");
 
 	$("<div/>")
 		.addClass("citizenCost")
 		.text(object.citizensToUpgrade)
-		.appendTo(".simpleBuildingPrompt");
+		.appendTo(".prompt");
 
 	$("<div/>")
 		.addClass("buildingButtons destroyButton")
-		.appendTo(".simpleBuildingPrompt")
+		.appendTo(".prompt")
 		.on("click",function(e){
 			e.stopPropagation;
 			buildingManager.destroy(index);
 			Game.updatePlayerStats();
 		});
+
+	if(isBarracks){
+			console.log(object.active ? "stopRecruitment":"continueRecruitment")
+			$("<div/>")
+			.addClass("buildingButtons")
+			.addClass(object.active ? "stopRecruitment":"continueRecruitment")
+			.appendTo(".prompt")
+			.on("click",function(e){
+				e.stopPropagation;
+				object.active = !(object.active);
+			})
+
+		
+	}
 }
 
 //Creates a menu for the townhall
