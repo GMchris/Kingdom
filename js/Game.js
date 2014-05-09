@@ -27,7 +27,7 @@ var GameControls = {
 	},
 
 	setInitialValues: function(){
-		Player.wood =2500;
+		Player.wood =2250;
 		Player.iron =0;
 		Player.food =400;
 		Player.gold =600;
@@ -49,7 +49,10 @@ var GameControls = {
 	loseGame:function(reason){
 		Visual.loseGamePrompt(reason);
 		this.deactivateTimer();
-		$("<div/>").addClass()
+	},
+	winGame:function(){
+		Visual.winGamePrompt();
+		this.deactivateTimer();
 	}
 }
 
@@ -163,6 +166,7 @@ var Events = {
 			this.type = this.types[Math.floor((Math.random() *this.types.length))];
 			this.warriors = Time.total/10;
 			this.bribe = Time.total/5;
+			console.log(this.warriors)
 			this.attack=function(){
 				$(".blackoutWindow").remove();
 				if(this.warriors>Player.warriors){
@@ -209,6 +213,9 @@ var Time={
 		},
 		addMonth:function(){
 			this.month++;
+			if(this.month>=13){
+				GameControls.winGame();
+			}
 			Events.tax();
 			Events.feed();
 			Events.firewood();
@@ -264,6 +271,15 @@ var Visual = {
 		$("#clouds").css("background-position",this.currentCloudPosition+"px");
 	},
 
+	winGamePrompt:function(){
+		$("<div/>").addClass("blackoutWindow").appendTo("#gameScreen");
+		$("<div/>").addClass("eventPrompt winPrompt").appendTo(".blackoutWindow").on("click",function(){
+			location.reload();
+		});
+		$("<div/>").addClass("eventTitle").text("Victory").appendTo(".eventPrompt");
+		$("<div/>").addClass("eventText").text("You've beaten the odds and your village still stands after an year's time. In your quesy you managed to gather "+Player.iron+" kilos of iron for the empire. Long live the king!").appendTo(".eventPrompt");
+	}
+
 	loseGamePrompt:function(reason){
 		var title,text;
 
@@ -283,7 +299,11 @@ var Visual = {
 			case "fire":
 				title = "Demoralizing fire";
 				text = "A starts at the edge of the city, but quickly reaches the town hall. After it's loss, all hope for the village goes too."
-				break;	
+				break;
+			case "wood":
+				title = "Wood shortage";
+				text = "Citizens can't craft items, build homes or warm themselves without wood. They've moved on to a different village."
+				break;
 			}
 
 		$("<div/>").addClass("blackoutWindow").appendTo("#gameScreen");
