@@ -147,27 +147,27 @@ Barn.prototype = new Building();
 //Forester specifics
 Forester.prototype.gather = function(){
 	var currentSeason = Game.getSeason;
-	Game.playerStats.wood += this.level*2;
-	if(currentSeason=="Spring"){Game.playerStats.food += this.level*2;floatIcon("food",this.index),true}
-	else if(currentSeason=="Winter"){Game.playerStats.wood += this.level}
+	Game.playerStats.wood += this.level*4;
+	if(currentSeason=="Spring"){Game.playerStats.food += this.level*4;floatIcon("food",this.index),true}
+	else if(currentSeason=="Winter"){Game.playerStats.wood += this.level*2}
 	else{Game.playerStats.food += this.level;floatIcon("food",this.index,true);}
 	floatIcon("wood",this.index)
 }
 
 //Mine specifics
 Mine.prototype.gather = function(){
-	Game.playerStats.iron += this.level*2;
-	if(Game.getSeason=="Summer"){Game.playerStats.gold += this.level}
-	else{Game.playerStats.gold += this.level/2;}
-	floatIcon("iron",this.index)
-	floatIcon("gold",this.index,true);
+	Game.playerStats.iron += this.level;
+	if(Game.getSeason=="Summer"){Game.playerStats.gold += this.level*4}
+	else{Game.playerStats.gold += this.level*2}
+	floatIcon("gold",this.index)
+	floatIcon("iron",this.index,true);
 }
 
 //TownHall specifics
 TownHall.prototype.gather=function(){
-	if(Game.getSeason=="Autumn"){Game.playerStats.citizens += this.level/3}
-	else{Game.playerStats.citizens += this.level/4;}
-	Game.playerStats[this.currentResource] += this.level/4;
+	if(Game.getSeason=="Autumn"){Game.playerStats.citizens += this.level}
+	else{Game.playerStats.citizens += this.level/2;}
+	Game.playerStats[this.currentResource] += this.level/2;
 	$("#foodOwed").text(Math.floor(Game.playerStats.citizens));
 	floatIcon("citizens",this.index)
 	floatIcon(this.currentResource,this.index,true);
@@ -175,16 +175,16 @@ TownHall.prototype.gather=function(){
 
 //Barn specifics
 Barn.prototype.gather=function(){
-	if(Game.getSeason=="Summer"){Game.playerStats.food += this.level*1.5;floatIcon("food",this.index);}
+	if(Game.getSeason=="Summer"){Game.playerStats.food += this.level*3;floatIcon("food",this.index);}
 	else if(Game.getSeason == "Winter"){}
-	else{Game.playerStats.food += this.level;floatIcon("food",this.index);}
+	else{Game.playerStats.food += this.level*2;floatIcon("food",this.index);}
 }
 
 //Barracks specifics
 Barracks.prototype.gather=function(){
 	if(this.active===false){return}
-	Game.playerStats.citizens -= 0.5;
-	Game.playerStats.warriors += this.level*0.10;
+	Game.playerStats.citizens -= 1;
+	Game.playerStats.warriors += this.level*0.60;
 	floatIcon("warriors",this.index);
 }
 
@@ -218,7 +218,7 @@ function makeBuildCell(type,index){
 			description="Gathers wood and some food.";
 			break;
 		case "mine":
-			description="Refines iron and some gold.";
+			description="Refines gold and iron.";
 			break;
 		case "barn":
 			description="Produces food";
@@ -294,7 +294,6 @@ function openSimpleBuildingMenu(index,object){
 		});
 
 	if(isBarracks){
-			console.log(object.active ? "stopRecruitment":"continueRecruitment")
 			$("<div/>")
 			.addClass("buildingButtons")
 			.addClass(object.active ? "stopRecruitment":"continueRecruitment")

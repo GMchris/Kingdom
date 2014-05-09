@@ -12,16 +12,44 @@ html,body{
 	height :100%;
 }
 
+body{
+	background-color:#222;
+}
+
 #gameScreen{
 	cursor:url(../images/regularCursor.png), auto;
 	margin: 0px;
 	overflow: hidden;
 	position: relative;
+	top:50px;
 	height: 650px;
 	width: 1000px;
 	background: #41d3f2;
 	margin: auto;
-	background-image: url(../images/backgrounds/plain.png)
+	background-image: url(../images/backgrounds/spring.png)
+}
+
+#clouds{
+	position: absolute;
+	height: 267px;
+	width: 1000px;
+	top:20px;
+	background-image: url(../images/backgrounds/clouds.png);
+}
+
+.flash{
+	position: absolute;
+	height: 650px;
+	width: 1000px;
+	background-color:white;
+}
+
+#guide{
+	position: absolute;
+	width: 1000px;
+	height: 650px;
+	background-image:url(../images/backgrounds/guide.png);
+	cursor:url(../images/pointerCursor.png),auto;
 }
 
 /*Game*/
@@ -127,6 +155,14 @@ html,body{
 	-moz-box-shadow:inset 3px 3px 15px 0px rgba(107, 57, 0, 1);
 }
 
+.losePrompt{
+	background: -webkit-gradient(linear, 0 0, 0 100%, from(#d03c12), to(#942303));
+	background: -webkit-linear-gradient(#d03c12, #942303);
+	background: -moz-linear-gradient(#d03c12, #942303);
+	background: -o-linear-gradient(#d03c12, #942303);
+	background: linear-gradient(#d03c12, #942303);
+}
+
 .blackoutWindow{
 	background-color:rgba(0,0,0,0.4);
 	position: absolute;
@@ -160,18 +196,21 @@ html,body{
 }
 
 .invasionButton{
+	line-height: 35px;
+	vertical-align: middle;
+	text-shadow: 0px 0px 5px black;
 	display: inline-block;
 	width: 100px;
 	height: 35px;
 	border-radius: 10px;
 	border:4px outset #722705;
 	text-align: center;
+	margin:10px 10px 0px 10px;
 }
 
 .fightButton{
 	box-shadow: inset 0px 0px 10px  #921300;
 	background-color: #ec3711;
-	margin:10px 10px 0px 10px;
 }
 
 .fightButton:hover{
@@ -513,17 +552,21 @@ html,body{
 	right:0px;
 	width:70px;
 	height:30px;
+	box-shadow: 0px 0px 5px 2px rgba(0,0,0,0.8);
 }
 
 #foodOwed{
+	background-color: #bc4c3b;
 	top:20px;
 }
 
 #goldOwed{
+	background-color:#ffc310;
 	top:60px;
 }
 
 #woodOwed{
+	background-color: #8d5f3a;
 	top:100px;
 }
 

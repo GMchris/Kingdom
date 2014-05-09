@@ -3,16 +3,23 @@ var Game = (function(){
 var GameControls = {
 
 	init : function(){
+		setInterval(function(){GameControls.visualLoop()},50)
 		GameControls.setInitialValues();
 		cyclePlayer();
-		GameControls.activateTimer();
 		Structures.buildingInit();
+		$("<div id='guide'></div>")
+		.appendTo("#gameScreen")
+		.on("click",function(e){
+			e.stopPropagation();
+			$(this).remove();
+			GameControls.activateTimer();
+		});
 	},
 
 	gameTimer:null,
 
 	activateTimer:function(){
-		this.gameTimer = setInterval(function(){GameControls.gameLoop();},50);
+		this.gameTimer = setInterval(function(){GameControls.gameLoop();},500);
 	},
 
 	deactivateTimer:function(){
@@ -20,12 +27,12 @@ var GameControls = {
 	},
 
 	setInitialValues: function(){
-		Player.wood =10000;
-		Player.iron =10000;
-		Player.food =100000;
-		Player.gold =10000;
-		Player.citizens =5000;
-		Player.warriors =10000;
+		Player.wood =2500;
+		Player.iron =0;
+		Player.food =400;
+		Player.gold =600;
+		Player.citizens =350;
+		Player.warriors =15;
 	},
 
 	gameLoop: function(){
@@ -35,9 +42,12 @@ var GameControls = {
 		Events.checkEventTime();
 	},
 
+	visualLoop:function(){
+		Visual.moveClouds();
+	},
+
 	loseGame:function(reason){
-		var lossPrompt = $("<div/>").addClass("prompt lossPrompt");
-		var description, title;
+		Visual.loseGamePrompt(reason);
 		this.deactivateTimer();
 		$("<div/>").addClass()
 	}
@@ -54,28 +64,37 @@ var Player = {
 
 var Events = {
 
-	increment: 20,
+	increment: 100,
 
-	nextEventTime : 20,
+	nextEventTime : 150,
 
-	periodicEvents : ["Invasion.invade","fire","plague","robbery"],
+	periodicEvents : ["invasion","fire","plague","invasion","robbery"],
 
 	checkEventTime : function(){
-		$(".prompt").remove();
 		var spot = Math.floor((Math.random() *this.periodicEvents.length));
 		if(Time.total >= this.nextEventTime){
+			$(".prompt").remove();
 			GameControls.deactivateTimer();
-			console.log(spot)
 			//In case of invasion only
-			if(spot==0){this.Invasion.invade()}
+			if(this.periodicEvents[spot]=="invasion"){this.Invasion.invade()}
 			//All other cases(simple events)
 			else{Events[Events.periodicEvents[spot]]();}
 			this.nextEventTime += this.increment;
 		}
 	},
 
+	firewood:function(){
+		var woodThisMonth = Time.month*100;
+		if(Time.season==3){woodThisMonth+=200}
+			if(Player.wood>=woodThisMonth){
+				Player.wood -=woodThisMonth;
+				return;
+			}
+			GameControls.loseGame("wood")
+	},
+
 	tax:function(){
-		var taxThisMonth = Time.month*150;
+		var taxThisMonth = Time.month*75;
 			if(Player.gold>=taxThisMonth){
 				Player.gold -= taxThisMonth;
 				return;
@@ -145,11 +164,14 @@ var Events = {
 			this.warriors = Time.total/10;
 			this.bribe = Time.total/5;
 			this.attack=function(){
+				$(".blackoutWindow").remove();
 				if(this.warriors>Player.warriors){
 					GameControls.loseGame("defeat")
 				}
 				else{
-					//Win results
+					Player.warriors -= (this.warriors/100)*20
+					Visual.eventPrompt("beatInvasion");
+					Events.increment += 20;
 				}
 			}
 			this.payoff=function(){
@@ -167,7 +189,7 @@ var Time={
 		season: 0,
 		months : ["March","April","May","June","July","August","September","October","November","December","January","February"],
 		seasons: ["Spring","Summer","Autumn","Winter"],
-		seasonModifiers:["Food from forester +100%","Gold +100%/Barn food +50%","Citizen grow +50%","Wood +50%/Food -100%"],
+		seasonModifiers:["Food from forester +100%","Gold +100%/Barn food +50%","Citizen growth +50%","Wood +50%/Food -100%"],
 		tick: function(){
 			this.total++;
 			this.ticks++;
@@ -189,16 +211,24 @@ var Time={
 			this.month++;
 			Events.tax();
 			Events.feed();
+			Events.firewood();
 			cyclePlayer();
 			if(this.month==3||this.month==6||this.month==9){
 				this.addSeason();
 			}
 			$("#month").text(this.months[this.month]);
-			$("#goldOwed").text((this.month+1)*150)
+			$("#goldOwed").text((this.month+1)*75)
+			$("#woodOwed").text((this.month+1)*100)
 		},
 		addSeason:function(){
-
 			this.season++;
+			Visual.flash();
+			if(this.season==2){
+				$("#gameScreen").css("background-image","url(images/backgrounds/autumn.png)");
+			}
+			if(this.season==3){
+				$("#gameScreen").css("background-image","url(images/backgrounds/winter.png)");
+			}
 			$("#season").text(this.seasons[this.season]);
 			$("#seasonModifiers").text(this.seasonModifiers[this.season]);
 		},
@@ -216,13 +246,68 @@ function cyclePlayer(){
 }
 
 var Visual = {
-	eventPrompt:function(type){
+	flash:function(){
+		var flashDiv = $("<div/>");
+
+		flashDiv.addClass("flash")
+		.appendTo("#gameScreen")
+		.fadeOut(300,function(){
+			$(this).remove();
+		})
+
+	},
+
+	currentCloudPosition:0,
+
+	moveClouds:function(){
+		this.currentCloudPosition+=1;
+		$("#clouds").css("background-position",this.currentCloudPosition+"px");
+	},
+
+	loseGamePrompt:function(reason){
+		var title,text;
+
+		switch(reason){
+			case "defeat":
+				title = "Military defeat";
+				text = "Your army wasn't strong enough to overcome the invaders and your city has fallen."
+				break;
+			case "tax":
+				title = "Broke"
+				text = "You couldn't pay the king's taxes. Needless to say the king's men came to collect, and didn't leave much of your village."
+				break;
+			case "food":
+				title = "Hunger";
+				text = "You didn't manage to save up enough food for your citizens. Some die of hunger, the rest abandon the village in search for better."
+				break;
+			case "fire":
+				title = "Demoralizing fire";
+				text = "A starts at the edge of the city, but quickly reaches the town hall. After it's loss, all hope for the village goes too."
+				break;	
+			}
+
+		$("<div/>").addClass("blackoutWindow").appendTo("#gameScreen");
+		$("<div/>").addClass("eventPrompt losePrompt").appendTo(".blackoutWindow").on("click",function(){
+			location.reload();
+		});
+		$("<div/>").addClass("eventTitle").text(title).appendTo(".eventPrompt");
+		$("<div/>").addClass("eventText").text(text).appendTo(".eventPrompt");
+
+
+	},
+
+	eventPrompt:function(reason){
 		var title,text,isInvasion=false;;
-		switch(type){
+		switch(reason){
 			case "invasion":
 				title = "Invasion";
 				text = "The "+Events.Invasion.currentArmy.type+" are attacking! Pay them off with gold or face them in battle with steel.";
 				isInvasion = true;
+				break;
+
+			case "beatInvasion":
+				title = "Victory";
+				text = "You've defeated the invading army! They'll think twice before coming back. Sadly you lost some good men yourself."
 				break;
 
 			case "fire":
@@ -249,7 +334,7 @@ var Visual = {
 		if(isInvasion){
 			$("<div/>")
 			.addClass("fightButton invasionButton")
-			.text("Fight "+ Time.total/10)
+			.text("Fight")
 			.appendTo(".eventPrompt")
 			.on("click",function(){
 				Events.Invasion.currentArmy.attack();
@@ -262,7 +347,9 @@ var Visual = {
 			.on("click",function(){
 				if(Player.gold<Events.Invasion.currentArmy.bribe){return}
 				Events.Invasion.currentArmy.payoff();
-				$(this).remove()
+				$(".blackoutWindow").remove();
+				Events.increment -=15;
+				GameControls.activateTimer();
 			});
 		}
 		else{
